@@ -83,6 +83,7 @@ if __name__ == '__main__':
     print(float_op_cnt)
 
     for n in [16, 32, 64, 128, 256]:
+        float_op_cnt = {'*': 0, '/': 0, '+': 0, '-': 0}
         a = rand(n, n)
         b = rand(n, n)
 
