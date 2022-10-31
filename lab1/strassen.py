@@ -82,7 +82,7 @@ if __name__ == '__main__':
     print((abs(strassen(a, b) - a@b) < 0.001).all())
     print(float_op_cnt)
 
-    for n in [16, 32, 64, 128, 256]:
+    for n in [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]:
         float_op_cnt = {'*': 0, '/': 0, '+': 0, '-': 0}
         a = rand(n, n)
         b = rand(n, n)
