@@ -1,8 +1,5 @@
 import numpy as np
-from lab1.strassen import split_into_quarts, matrix_t
-
-
-operation_ctn = {'+-': 0, '*': 0}
+from lab1.strassen import split_into_quarts, matrix_t, strassen, float_op_cnt
 
 
 def inverse(matrix: matrix_t) -> matrix_t:
@@ -13,19 +10,15 @@ def inverse(matrix: matrix_t) -> matrix_t:
 
     inv_a11 = inverse(a11)
 
-    s22 = a22 - a21 @ inv_a11 @ a12
-    operation_ctn['+-'] += a22.shape[0] * a22.shape[1]
-    operation_ctn['*'] += a21.shape[0] ** 2.81 + a21.shape[0] ** 2.81
+    s22 = a22 - strassen(strassen(a21, inv_a11), a12)
+    float_op_cnt['+-'] += a22.shape[0] * a22.shape[1]
 
     inv_s22 = inverse(s22)
 
-    b11 = inv_a11 @ (np.identity(inv_a11.shape[1]) + a12 @ inv_s22 @ a21 @ inv_a11)
-    operation_ctn['*'] += 4 * (a21.shape[0] ** 2.81)
-    operation_ctn['+-'] += a12.shape[0] * a12.shape[1]
-    b12 = -inv_a11 @ a12 @ inv_s22
-    operation_ctn['*'] += 2 * (a21.shape[0] ** 2.81)
-    b21 = - inv_s22 @ a21 @ inv_a11
-    operation_ctn['*'] += 2 * (a21.shape[0] ** 2.81)
+    b11 = strassen(inv_a11, (np.identity(inv_a11.shape[1]) + strassen(strassen(strassen(a12, inv_s22), a21), inv_a11)))
+    float_op_cnt['+-'] += a12.shape[0] * a12.shape[1]
+    b12 = strassen(strassen(- inv_a11, a12), inv_s22)
+    b21 = strassen(strassen(- inv_s22, a21), inv_a11)
     b22 = inv_s22
 
     return np.bmat([[b11, b12], [b21, b22]])
@@ -37,9 +30,10 @@ if __name__ == '__main__':
     # A = np.array([[10.0, 40.0], [20.0, 50.0]])
     print(A)
     print('--------------------------')
-
+    
+    float_op_cnt = {'*': 0, '/': 0, '+-': 0}
     B = inverse(A)
-    print(operation_ctn)
+    print(float_op_cnt)
     # print(B)
 
     # print(A @ B)

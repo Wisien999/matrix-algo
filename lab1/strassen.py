@@ -3,7 +3,7 @@ import numpy as np
 matrix_t = np.ndarray
 
 
-float_op_cnt = {'*': 0, '/': 0, '+': 0, '-': 0}
+float_op_cnt = {'*': 0, '/': 0, '+-': 0}
 
 
 def split_into_quarts(matrix: matrix_t) \
@@ -20,12 +20,12 @@ def split_into_quarts(matrix: matrix_t) \
 
 
 def add(matrix1: matrix_t, matrix2: matrix_t) -> matrix_t:
-    float_op_cnt['+'] += matrix1.shape[0] * matrix1.shape[1]
+    float_op_cnt['+-'] += matrix1.shape[0] * matrix1.shape[1]
     return matrix1 + matrix2
 
 
 def sub(matrix1: matrix_t, matrix2: matrix_t) -> matrix_t:
-    float_op_cnt['-'] += matrix1.shape[0] * matrix1.shape[1]
+    float_op_cnt['+-'] += matrix1.shape[0] * matrix1.shape[1]
     return matrix1 - matrix2
 
 
@@ -83,7 +83,7 @@ if __name__ == '__main__':
     print(float_op_cnt)
 
     for n in [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]:
-        float_op_cnt = {'*': 0, '/': 0, '+': 0, '-': 0}
+        float_op_cnt = {'*': 0, '/': 0, '+-': 0}
         a = rand(n, n)
         b = rand(n, n)
 
