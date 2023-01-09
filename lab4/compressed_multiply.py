@@ -8,11 +8,12 @@ def matrix_vector_mult(M: Node, X : np.ndarray):
     n, m = X.shape
     if len(M.children) == 0:
         if M.rank == 0:
-            return np.zeros((n, n))
+            return np.zeros((n, 1))
         else:
             return M.U @ (M.V @ X)
     else:
         X1, X2 = X[0:n//2, 0:1], X[n//2:n, 0:1]
+        
         Y11 = matrix_vector_mult(M.children[0], X1)
         Y12 = matrix_vector_mult(M.children[1], X2)
         Y21 = matrix_vector_mult(M.children[2], X1)
@@ -53,16 +54,16 @@ def matrix_mult(M: Node):
 
 
 if __name__ == '__main__':
-    N = 2
+    N = 7
 
     M = generate_matrix(2 ** N, 2 ** N, 0.8)
     print('Matrix:')
     print(M)
     tree_M = create_tree(M, 0, 2**N - 1, 0, 2**N -1, 2**2, np.float32(1e-5))
 
-    print('Normal multiply:')
-    print(M @ M)
+    vec = np.random.rand(2**N, 1)
 
-    print('My multiply:')
-    print(matrix_mult(tree_M))
+    res = matrix_vector_mult(tree_M, vec)
+
+    print(res)
     
